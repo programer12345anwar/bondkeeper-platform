@@ -1,0 +1,39 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: bondkeeper-postgres
+    environment:
+      POSTGRES_DB: bondkeeper
+      POSTGRES_USER: bondkeeper
+      POSTGRES_PASSWORD: bondkeeper
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U bondkeeper -d bondkeeper"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: bondkeeper-backend
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: bondkeeper
+      DB_USERNAME: bondkeeper
+      DB_PASSWORD: bondkeeper
+      SERVER_PORT: 8080
+    ports:
+      - "8080:8080"
+    restart: unless-stopped
+
+volumes:
+  postgres_data:

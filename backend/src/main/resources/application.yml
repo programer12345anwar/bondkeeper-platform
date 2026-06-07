@@ -1,0 +1,51 @@
+spring:
+  application:
+    name: bondkeeper-backend
+
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:bondkeeper}
+    username: ${DB_USERNAME:bondkeeper}
+    password: ${DB_PASSWORD:bondkeeper}
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+    show-sql: false
+
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+
+server:
+  port: ${SERVER_PORT:8080}
+  servlet:
+    context-path: /api
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    operations-sorter: method
+    tags-sorter: alpha
+
+bondkeeper:
+  cors:
+    allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:3000,http://localhost:5173}
+  jwt:
+    secret: ${JWT_SECRET:404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970}
+    access-token-expiration-ms: ${JWT_ACCESS_EXPIRATION_MS:900000}
+    refresh-token-expiration-ms: ${JWT_REFRESH_EXPIRATION_MS:604800000}
+    issuer: ${JWT_ISSUER:bondkeeper-api}
+
+logging:
+  level:
+    com.bondkeeper.backend: INFO
+    org.springframework.security: WARN

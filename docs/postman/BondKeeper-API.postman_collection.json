@@ -1,0 +1,240 @@
+{
+  "info": {
+    "name": "BondKeeper API",
+    "description": "BondKeeper Phase 2 - Authentication & Core APIs",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:8080/api" },
+    { "key": "accessToken", "value": "" },
+    { "key": "refreshToken", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"firstName\": \"Jane\",\n  \"lastName\": \"Doe\",\n  \"email\": \"jane@bondkeeper.app\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": "{{baseUrl}}/v1/auth/register"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (json.data && json.data.accessToken) {",
+                  "  pm.collectionVariables.set('accessToken', json.data.accessToken);",
+                  "  pm.collectionVariables.set('refreshToken', json.data.refreshToken);",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"demo@bondkeeper.app\",\n  \"password\": \"password\"\n}"
+            },
+            "url": "{{baseUrl}}/v1/auth/login"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (json.data && json.data.accessToken) {",
+                  "  pm.collectionVariables.set('accessToken', json.data.accessToken);",
+                  "  pm.collectionVariables.set('refreshToken', json.data.refreshToken);",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Refresh Token",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"refreshToken\": \"{{refreshToken}}\"\n}"
+            },
+            "url": "{{baseUrl}}/v1/auth/refresh"
+          }
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" }
+            ],
+            "url": "{{baseUrl}}/v1/auth/logout"
+          }
+        }
+      ]
+    },
+    {
+      "name": "User Profile",
+      "item": [
+        {
+          "name": "Get Profile",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+            "url": "{{baseUrl}}/v1/users/me"
+          }
+        },
+        {
+          "name": "Update Profile",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"firstName\": \"Demo\",\n  \"lastName\": \"User\"\n}"
+            },
+            "url": "{{baseUrl}}/v1/users/me"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Categories",
+      "item": [
+        {
+          "name": "List Categories",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+            "url": "{{baseUrl}}/v1/categories"
+          }
+        },
+        {
+          "name": "Create Category",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Work\",\n  \"description\": \"Work contacts\"\n}"
+            },
+            "url": "{{baseUrl}}/v1/categories"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Priority Levels",
+      "item": [
+        {
+          "name": "List Priority Levels",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+            "url": "{{baseUrl}}/v1/priority-levels"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Contacts",
+      "item": [
+        {
+          "name": "Search Contacts",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+            "url": {
+              "raw": "{{baseUrl}}/v1/contacts/search?query=&page=0&size=20&sortBy=name&sortDirection=asc",
+              "host": ["{{baseUrl}}"],
+              "path": ["v1", "contacts", "search"],
+              "query": [
+                { "key": "query", "value": "" },
+                { "key": "categoryId", "value": "1", "disabled": true },
+                { "key": "priorityLevelId", "value": "1", "disabled": true },
+                { "key": "innerCircle", "value": "true", "disabled": true },
+                { "key": "page", "value": "0" },
+                { "key": "size", "value": "20" },
+                { "key": "sortBy", "value": "name" },
+                { "key": "sortDirection", "value": "asc" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Create Contact",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Alice Smith\",\n  \"phoneNumber\": \"+1234567890\",\n  \"relationshipType\": \"FRIEND\",\n  \"innerCircle\": true,\n  \"categoryId\": 1,\n  \"priorityLevelId\": 1\n}"
+            },
+            "url": "{{baseUrl}}/v1/contacts"
+          }
+        },
+        {
+          "name": "Inner Circle",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+            "url": "{{baseUrl}}/v1/contacts/inner-circle"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Interactions",
+      "item": [
+        {
+          "name": "Add Interaction",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"interactionType\": \"CALL\",\n  \"interactionDate\": \"2026-06-04\",\n  \"notes\": \"Catch-up call\",\n  \"contactId\": 1\n}"
+            },
+            "url": "{{baseUrl}}/v1/interactions"
+          }
+        },
+        {
+          "name": "Recalculate Relationship Score",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+            "url": "{{baseUrl}}/v1/interactions/contact/1/recalculate-score"
+          }
+        }
+      ]
+    }
+  ]
+}
