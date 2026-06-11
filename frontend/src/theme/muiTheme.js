@@ -4,7 +4,7 @@ export const getMuiTheme = (mode) =>
   createTheme({
     palette: {
       mode,
-      primary: { main: '#6366f1', light: '#818cf8', dark: '#4f46e5' },
+      primary: { main: '#5f61eb', light: '#818cf8', dark: '#4f46e5' },
       secondary: { main: '#8b5cf6' },
       background: {
         default: mode === 'dark' ? '#0f1117' : '#f8fafc',
