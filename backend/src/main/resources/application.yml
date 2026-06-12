@@ -44,7 +44,6 @@ bondkeeper:
     access-token-expiration-ms: ${JWT_ACCESS_EXPIRATION_MS:900000}
     refresh-token-expiration-ms: ${JWT_REFRESH_EXPIRATION_MS:604800000}
     issuer: ${JWT_ISSUER:bondkeeper-api}
-
 logging:
   level:
     com.bondkeeper.backend: INFO
