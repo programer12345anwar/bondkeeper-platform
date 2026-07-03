@@ -33,6 +33,8 @@ public class AuthController {
                 .body(ApiResponse.success("Registration successful", response));
     }
 
+    
+
     @PostMapping("/login")
     @Operation(summary = "Login with email and password")
     public ResponseEntity<ApiResponse<AuthResponse>> login(@Valid @RequestBody LoginRequest request) {
